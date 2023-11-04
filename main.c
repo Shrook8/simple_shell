@@ -22,7 +22,7 @@ void handle_signal(int signal)
 /**
  * run_command - executes a command
  * @arguments: array of command
- * @frOnt: double pointer 
+ * @front: double pointer
  *
  * Return: if error occurs otherwise exit
 */
@@ -101,35 +101,32 @@ int main(int argc, char *argv[])
 	if (argc != 1)
 	{
 		ret = process_file_commands(argv[1], exe_ret);
-        free_environment();
-        free_alias_list(aliases);
-        return (*exe_ret);
-    }
-
-    if (!isatty(STDIN_FILENO))
-    {
-        while (ret != END_OF_FILE && ret != EXIT)
-            ret = handle_args(exe_ret);
-        free_environment();
-        free_alias_list(aliases);
-        return (*exe_ret);
-    }
-
-    while (1)
-    {
-        write(STDOUT_FILENO, prompt, 2);
-        ret = handle_args(exe_ret);
-        if (ret == END_OF_FILE || ret == EXIT)
-        {
-            if (ret == END_OF_FILE)
-                write(STDOUT_FILENO, new_line, 1);
-            free_environment();
-            free_alias_list(aliases);
-            exit(*exe_ret);
-        }
-    }
-
-    free_environment();
-    free_alias_list(aliases);
-    return (*exe_ret);
+	free_environment();
+	free_alias_list(aliases);
+	return (*exe_ret);
+	}
+	if (!isatty(STDIN_FILENO))
+	{
+	while (ret != END_OF_FILE && ret != EXIT)
+	ret = handle_args(exe_ret);
+	free_environment();
+	free_alias_list(aliases);
+	return (*exe_ret);
+	}
+	while (1)
+	{
+		write(STDOUT_FILENO, prompt, 2);
+	ret = handle_args(exe_ret);
+	if (ret == END_OF_FILE || ret == EXIT)
+	{
+	if (ret == END_OF_FILE)
+	write(STDOUT_FILENO, new_line, 1);
+	free_environment();
+	free_alias_list(aliases);
+	exit(*exe_ret);
+	}
+	}
+	free_environment();
+	free_alias_list(aliases);
+	return (*exe_ret);
 }
