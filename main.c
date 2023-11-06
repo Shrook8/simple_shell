@@ -1,7 +1,7 @@
 #include "shell.h"
 #include <signal.h>
 
-void signal_handler(int *signal);
+void signal_handler(int signal);
 int execute_command(char **args, char **front);
 
 /**
@@ -11,10 +11,9 @@ int execute_command(char **args, char **front);
  * Return: nothing
 */
 
-void signal_handler(int *signal)
+void signal_handler(int signal)
 {
 	(void)signal;
-	signal(SIGINT, signal_handler);
 	write(STDIN_FILENO, "\n$ ", 3);
 }
 
@@ -87,6 +86,7 @@ int main(int argc, char *argv[])
 {
 	int ret = 0, exe_ret = 0;
 	char *prompt = "$ ", *new_line = "\n";
+	char *args[] = {NULL};
 
 	name = argv[0];
 	hist = 1;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	if (!isatty(STDIN_FILENO))
 	{
 	while (ret != END_OF_FILE && ret != EXIT)
-	ret = handle_signal(&exe_ret);
+	ret = execute_command(args, NULL);
 	free_environment();
 	free_alias_list(alias_list);
 	return (exe_ret);
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-	ret = signal_handler(&exe_ret);
+	ret = execute_command(args, NULL);
 	if (ret == END_OF_FILE || ret == EXIT)
 	{
 	if (ret == END_OF_FILE)

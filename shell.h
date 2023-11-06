@@ -13,6 +13,8 @@
 
 #define EOF_MAKER -2
 #define EXIT_CODE -3
+#define END_OF_FILE 1
+#define EXIT 2
 
 
 extern char **environ;
