@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <signal.h>
 
 void handle_signal(int signal);
 int run_command(char **arguments, char **front);
