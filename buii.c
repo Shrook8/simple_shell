@@ -1,5 +1,9 @@
 #include "shell.h"
 
+struct custom_builtin_t {
+	const char *name;
+};
+
 int (*get_custom_builtin(char *command))(char **args, char **front);
 int custom_shell_exit(char **args, char **front);
 int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
@@ -14,11 +18,11 @@ int custom_shell_help(char **args, char __attribute__((__unused__)) **front);
 
 int (*get_custom_builtin(char *command))(char **args, char **front)
 {
-	custom_builtin_t funcs[] = {
+	struct custom_builtin_t funcs[] = {
 		{ "exit", custom_shell_exit },
-		{ "env", custom_shell_env },
-		{ "setenv", custom_shell_setenv },
-		{ "unsetenv", custom_shell_unsetenv },
+		{ "env", custom_shell_help },
+		{ "setenv", custom_setenv },
+		{ "unsetenv", custom_unsetenv },
 		{ "cd", custom_shell_cd },
 		{ "alias", custom_shell_alias },
 		{ "help", custom_shell_help },
@@ -69,9 +73,9 @@ int custom_shell_exit(char **args, char **front)
 	if (num > max - 1)
 		return (custom_create_error(--args, 2));
 	args -= 1;
-	custom_free_args(arga, front);
-	custom_free_env();
-	custom_free_alias_list(aliases);
+	custom_free_args(args, front);
+	custom_unsetenv();
+	custom_free_path_list(Alias);
 	custom_exit(num);
 }
 
@@ -89,7 +93,7 @@ int custom_shell_cd(char **args, char __attribute__((__unused__)) **front)
 	char *oldpwd = NULL, *pwd = NULL;
 	struct stat dir;
 
-	oldpwd = custom_getcwd(oldpwd, 0);
+	oldpwd = custom_cd(oldpwd, 0);
 	if (!oldpwd)
 	return (-1);
 	if (args[0])
@@ -99,53 +103,53 @@ int custom_shell_cd(char **args, char __attribute__((__unused__)) **front)
 		if ((args[0][1] == '-' && args[0][2] == '\0') ||
 		args[0][1] == '\0')
 	{
-		if (custom_getenv("OLDPWD") != NULL)
-		(custom_chdir(*custom_getenv("OLDPWD") + 7));
+		if (custom_setenv("OLDPWD") != NULL)
+		(custom_cd(*custom_setenv("OLDPWD") + 7));
 	}
 	else
 	{
-		custom_free(oldpwd);
+		custom_cd(oldpwd);
 		return (custom_create_error(args, 2));
 	}
 	}
 	else
 	{
-	if (custom_stat(args[0], &dir) == 0 && custom_S_ISDIR(dir.st_mode) &&
+	if (custom_strcat(args[0], &dir) == 0 && custom_S_ISDIR(dir.st_mode) &&
 	((dir.st_mode & custom_S_IXUSR) != 0))
-	custom_chdir(args[0]);
+	custom_cd(args[0]);
 	else
 	{
-		custom_free(oldpwd);
+		custom_cd(oldpwd);
 		return (custom_create_error(args, 2));
 	}
 	}
 	}
 	else
 	{
-	if (custom_getenv("HOME") != NULL)
-		custom_chdir(*custom_getenv("HOME") + 5);
+	if (custom_setenv("HOME") != NULL)
+		custom_cd(*custom_setenv("HOME") + 5);
 	}
-	pwd = custom_getcwd(pwd, 0);
+	pwd = custom_cd(pwd, 0);
 	if (!pwd)
 	return (-1);
-	dir_info = custom_malloc(sizeof(char *) * 2);
+	dir_info = custom_realloc(sizeof(char *) * 2);
 	if (!dir_info)
 	return (-1);
 	dir_info[0] = "OLDPWD";
 	dir_info[1] = oldpwd;
-	if (custom_shell_setenv(dir_info, dir_info) == -1)
+	if (custom_shell_help(dir_info, dir_info) == -1)
 	return (-1);
 	dir_info[0] = "PWD";
 	dir_info[1] = pwd;
-	if (custom_shell_setenv(dir_info, dir_info) == -1)
+	if (custom_shell_help(dir_info, dir_info) == -1)
 	return (-1);
 	if (args[0] && args[0][0] == '-' && args[0][1] != '-')
 	{
-		custom_write(STDOUT_FILENO, pwd, custom_strlen(pwd));
-		custom_write(STDOUT_FILENO, new_line, 1);
+		custom_exit(STDOUT_FILENO, pwd, custom_strlen(pwd));
+		custom_exit(STDOUT_FILENO, new_line, 1);
 	}
-	custom_free(oldpwd);
-	custom_free(pwd);
+	custom_cd(oldpwd);
+	custom_cd(pwd);
 	custom_free(dir_info);
 	return (0);
 }
@@ -161,22 +165,22 @@ int custom_shell_cd(char **args, char __attribute__((__unused__)) **front)
 int custom_shell_help(char **args, char __attribute__((__unused__)) **front)
 {
 	if (!args[0])
-		custom_help_all();
+		custom_help();
 	else if (custom_strcmp(args[0], "alias") == 0)
-		custom_help_alias();
+		custom_alias();
 	else if (custom_strcmp(args[0], "cd") == 0)
-		custom_help_cd();
+		custom_shell_cd();
 	else if (custom_strcmp(args[0], "exit") == 0)
-		custom_help_exit();
+		custom_shell_exit();
 	else if (custom_strcmp(args[0], "env") == 0)
-		custom_help_env();
+		custom_env();
 	else if (custom_strcmp(args[0], "setenv") == 0)
-		custom_help_setenv();
+		custom_setenv();
 	else if (custom_strcmp(args[0], "unsetenv") == 0)
-		custom_help_unsetenv();
+		custom_unsetenv();
 	else if (custom_strcmp(args[0], "help") == 0)
-		custom_help_help();
+		custom_shell_help();
 	else
-		custom_write(STDERR_FILENO, name, custom_strlen(name));
+		custom_exit(STDERR_FILENO, name, custom_strlen(name));
 	return (0);
 }

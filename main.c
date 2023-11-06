@@ -19,7 +19,7 @@ void signal_handler(int signal)
 
 /**
  * execute_command - executes a command
- * @arguments: array of command
+ * @args: array of command
  * @front: double pointer
  *
  * Return: if error occurs otherwise exit
