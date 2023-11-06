@@ -116,6 +116,12 @@ int custom_alias(char **arguments, char __attribute__((__unused__)) **front);
 int custom_help(char **args, char __attribute__((__unused__)) **front);
 int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
 
+int (*get_custom_builtin(char *command))(char **arguments, char **front);
+int custom_exit(char **arguments, char **front);
+int custom_cd(char **arguments, char **front);
+int custom_help(char **arguments, char **front);
+void custom_free_path_list(PathNode *head);
+
 /* builtin h */
 
 char **copy_environment(void);
