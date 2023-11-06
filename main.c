@@ -1,7 +1,7 @@
 #include "shell.h"
 #include <signal.h>
 
-void handle_signal(int signal);
+void handle_signal(int *signal);
 int run_command(char **arguments, char **front);
 
 /**
@@ -11,7 +11,7 @@ int run_command(char **arguments, char **front);
  * Return: nothing
 */
 
-void handle_signal(int signal)
+void handle_signal(int *signal)
 {
 	char *new_prompt = "\n$ ";
 
@@ -37,14 +37,14 @@ int run_command(char **arguments, char **front)
 	if (command[0] != '/' && command[0] != '.')
 	{
 		flag = 1;
-		command = get_location(command);
+		command = custom_get_command_location(*command);
 	}
 	if (!command || (access(command, F_OK) == -1))
 	{
 		if (errno == EACCES)
-			ret = (create_error(arguments, 126));
+			ret = (generate_error(arguments, 126));
 		else
-			ret = (create_error(arguments, 127));
+			ret = (generate_error(arguments, 127));
 	}
 	else
 	{
@@ -60,10 +60,10 @@ int run_command(char **arguments, char **front)
 		{
 			execve(command, arguments, environ);
 			if (errno == EACCES)
-				ret = (create_error(arguments, 126));
+				ret = (generate_error(arguments, 126));
 			free_env();
 			free_args(arguments, front);
-			free_alias_list(aliases);
+			free_alias_list(Alias);
 			_exit(ret);
 		}
 		else
@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
 	name = argv[0];
 	hist = 1;
-	aliases = NULL;
+	Alias = NULL;
 	signal(SIGINT, handle_signal);
 	*exe_ret = 0;
 	environ = copy_environment();
@@ -103,31 +103,31 @@ int main(int argc, char *argv[])
 	{
 		ret = process_file_commands(argv[1], exe_ret);
 	free_environment();
-	free_alias_list(aliases);
+	free_alias_list(Alias);
 	return (*exe_ret);
 	}
 	if (!isatty(STDIN_FILENO))
 	{
 	while (ret != END_OF_FILE && ret != EXIT)
-	ret = handle_args(exe_ret);
+	ret = handle_signal(exe_ret);
 	free_environment();
-	free_alias_list(aliases);
+	free_alias_list(Alias);
 	return (*exe_ret);
 	}
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-	ret = handle_args(exe_ret);
+	ret = handle_signal(exe_ret);
 	if (ret == END_OF_FILE || ret == EXIT)
 	{
 	if (ret == END_OF_FILE)
 	write(STDOUT_FILENO, new_line, 1);
 	free_environment();
-	free_alias_list(aliases);
+	free_alias_list(Alias);
 	exit(*exe_ret);
 	}
 	}
 	free_environment();
-	free_alias_list(aliases);
+	free_alias_list(Alias);
 	return (*exe_ret);
 }

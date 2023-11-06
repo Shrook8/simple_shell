@@ -66,14 +66,15 @@ Alias *alias_list;
 
 /* main */
 
+void handle_signal(int *signal);
 ssize_t custom_getline(char **lineptr, size_t *n, FILE *stream);
 void *custom_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char **custom_strtok(char *line, char *delimiters);
-char *get_command_location(char *command);
-PathNode *get_path_directories(char *path);
-int execute_command(char **arguments, char **front);
-void free_path_list(PathNode *head);
-char *int_to_string(int number);
+char *custom_get_command_location(char *command);
+PathNode *custom_get_path_directories(char *path);
+int custom_execute_command(char **arguments, char **front);
+void custom_free_path_list(PathNode *head);
+char *custom_int_to_string(int number);
 
 /* input */
 
@@ -101,8 +102,8 @@ int custom_strncmp(const char *string1, const char *string2, size_t num);
 
 /* builtin */
 
-int (*get_builtin_command(char *command))(char **arguments, char **front);
-int custom_exit(char **arguments, char **front);
+int (*get_custom_builtin(char *command))(char **args, char **front);
+int custom_shell_exit(char **args, char **front);
 int custom_env(char **arguments, char __attribute__((__unused__)) **front);
 int custom_setenv(char **arguments, char __attribute__((__unused__)) **front);
 int custom_unsetenv(char **arguments,
@@ -110,7 +111,8 @@ int custom_unsetenv(char **arguments,
 int custom_change_directory(char **arguments,
 		char __attribute__((__unused__)) **front);
 int custom_alias(char **arguments, char __attribute__((__unused__)) **front);
-int custom_help(char **arguments, char __attribute__((__unused__)) **front);
+int custom_help(char **args, char __attribute__((__unused__)) **front);
+int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
 
 /* builtin h */
 

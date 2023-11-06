@@ -1,28 +1,28 @@
 #include "shell.h"
 
-int (*get_custom_builitin(char *command))(char **args, char **front);
+int (*get_custom_builtin(char *command))(char **args, char **front);
 int custom_shell_exit(char **args, char **front);
 int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
 int custom_shell_help(char **args, char __attribute__((__unused__)) **front);
 
 /**
- * get_custom_builitin - matches a command
+ * get_custom_builtin - matches a command
  * @command: the command
  *
  * Return: pointer
 */
 
-int (*get_custom_builitin(char *command))(char **args, char **front)
+int (*get_custom_builtin(char *command))(char **args, char **front)
 {
-	custom_builitin_t funcs[] = {
-		{"exit", custom_shell_exit},
-		{"env", custom_shell_env},
-		{"setenv", custom_shell_setenv},
-		{"unsetenv", custom_shell_unsetenv},
-		{"cd", custom_shell_cd},
-		{"alias", custom_shel_alias},
-		{"help", custom_shell_help},
-		{NULL, NULL}
+	custom_builtin_t funcs[] = {
+		{ "exit", custom_shell_exit },
+		{ "env", custom_shell_env },
+		{ "setenv", custom_shell_setenv },
+		{ "unsetenv", custom_shell_unsetenv },
+		{ "cd", custom_shell_cd },
+		{ "alias", custom_shell_alias },
+		{ "help", custom_shell_help },
+		{ NULL, NULL }
 	};
 	int a;
 
