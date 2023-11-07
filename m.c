@@ -42,6 +42,7 @@ int main(void)
 	{
 		execute_command(args);
 	}
+	return (0);
 	}
 	return (0);
 
