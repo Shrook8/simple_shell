@@ -1,6 +1,7 @@
 #include "shell.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * main - the main
@@ -41,6 +42,7 @@ int main(void)
 	{
 		execute_command(args);
 	}
-
+	}
 	return (0);
+
 }

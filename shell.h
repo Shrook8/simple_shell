@@ -15,6 +15,8 @@
 #define EXIT_CODE -3
 #define END_OF_FILE 1
 #define EXIT 2
+#define MAX_INPUT_SIZE 1024
+#define MAX_ARG_SIZE 1024
 
 
 extern char **environ;
@@ -114,9 +116,9 @@ int custom_alias(char **arguments, char __attribute__((__unused__)) **front);
 int custom_help(char **args);
 
 int (*get_custom_builtin(char *command))(char **arguments, char **front);
-int custom_shell_exit(char **args);
-int custom_shell_cd(char **args);
-int custom_help(char **arguments, char **front);
+/* int custom_shell_exit(char **args); */
+/* int custom_shell_cd(char **args); */
+/* int custom_help(char **arguments, char **front); */
 void custom_free_path_list(PathNode *head);
 
 /* builtin h */

@@ -2,7 +2,7 @@
 #include <signal.h>
 
 void signal_handler(int signal);
-int execute_command(char **args, char **front);
+int executed_command(char **args, char **front);
 
 /**
  * signal_handler - handle signal and print new promot
@@ -18,14 +18,14 @@ void signal_handler(int signal)
 }
 
 /**
- * execute_command - executes a command
+ * executed_command - executes a command
  * @args: array of command
- * @front: double pointer
+ * @front: doble pointer
  *
  * Return: if error occurs otherwise exit
 */
 
-int execute_command(char **args, char **front)
+int executed_command(char **args, char **front)
 {
 	pid_t child_pid;
 	int status, is_external = 0, ret = 0;
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 	if (!isatty(STDIN_FILENO))
 	{
 	while (ret != END_OF_FILE && ret != EXIT)
-	ret = execute_command(args, NULL);
+	ret = executed_command(args, NULL);
 	free_environment();
 	free_alias_list(alias_list);
 	return (exe_ret);
@@ -114,7 +114,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-	ret = execute_command(args, NULL);
+	ret = executed_command(args, NULL);
 	if (ret == END_OF_FILE || ret == EXIT)
 	{
 	if (ret == END_OF_FILE)
