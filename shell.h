@@ -152,4 +152,10 @@ void display_unsetenv_help(void);
 void display_history_help(void);
 int process_file_commands(char *file_path, int *execution_result);
 
+void parse_input(char *input, char **args);
+void custom_shell_cd(char **args);
+void custom_shell_exit(void);
+void custom_shell_help(void);
+void execute_command(char **args);
+
 #endif /* _SHELL_H_ */

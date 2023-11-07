@@ -19,7 +19,6 @@ int (*get_custom_builtin(char *command))(char **args)
 		const char *name;
 		int (*func)(char **args);
 	};
-	
 	struct custom_builtin_t funcs[] = {
 		{ "exit", custom_shell_exit },
 		{ "cd", custom_shell_cd },
@@ -32,7 +31,7 @@ int (*get_custom_builtin(char *command))(char **args)
 	{
 		if (_strcmp(funcs[a].name, command) == 0)
 	{
-			return (funcs[a].func;
+			return (funcs[a].func);
 	}
 	}
 	return (NULL);

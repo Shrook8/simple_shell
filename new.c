@@ -8,6 +8,14 @@
 #define MAX_INPUT_SIZE 1024
 #define MAX_ARG_SIZE 64
 
+/**
+ * parse_input - input parses
+ * @input: the input
+ * @args: the arguments
+ *
+ * Return: nothing
+*/
+
 void parse_input(char *input, char **args)
 {
 	int i = 0;
@@ -19,6 +27,13 @@ void parse_input(char *input, char **args)
 	args[i] = strtok(NULL, " \t\n");
 	}
 }
+
+/**
+ * custom_shell_cd - the cd of the shell
+ * @args: the arguments
+ *
+ * Return: nothing
+*/
 
 void custom_shell_cd(char **args)
 {
@@ -35,10 +50,22 @@ void custom_shell_cd(char **args)
 	}
 }
 
+/**
+ * custom_shell_exit - exiting the shell
+ *
+ * Return: nothing
+*/
+
 void custom_shell_exit(void)
 {
 	exit(0);
 }
+
+/**
+ * custom_shell_help - helping
+ *
+ * Return: nothing
+*/
 
 void custom_shell_help(void)
 {
@@ -47,6 +74,13 @@ void custom_shell_help(void)
 	printf("2. exit - Exit the shell\n");
 	printf("3. help - Display this help message\n");
 }
+
+/**
+ * execute_command - command
+ * @args: the arguments
+ *
+ * Return: nothing
+*/
 
 void execute_command(char **args)
 {
@@ -71,41 +105,3 @@ void execute_command(char **args)
 		waitpid(pid, &status, 0);
 	}
 }
-
-int main(void)
-{
-	char input[MAX_INPUT_SIZE];
-	char *args[MAX_ARG_SIZE];
-
-	while (1)
-	{
-	printf("Custom Shell > ");
-	if (fgets(input, sizeof(input), stdin) == NULL)
-	{
-	break;
-	}
-	parse_input(input, args);
-	if (args[0] == NULL)
-	{
-	continue;
-	}
-	if (strcmp(args[0], "cd") == 0)
-	{
-	custom_shell_cd(args);
-	}
-	else if (strcmp(args[0], "exit") == 0)
-	{
-	custom_shell_exit();
-	}
-	else if (strcmp(args[0], "help") == 0)
-	{
-	custom_shell_help();
-	}
-	else
-	{
-		execute_command(args);
-	}
-
-	return (0);
-}
-
