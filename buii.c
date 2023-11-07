@@ -1,13 +1,9 @@
 #include "shell.h"
 
-struct custom_builtin_t {
-	const char *name;
-};
+int custom_shell_exit(char **args);
+int custom_shell_cd(char **args);
+int custom_shell_help(char **args);
 
-int (*get_custom_builtin(char *command))(char **args, char **front);
-int custom_shell_exit(char **args, char **front);
-int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
-int custom_shell_help(char **args, char __attribute__((__unused__)) **front);
 
 /**
  * get_custom_builtin - matches a command
@@ -16,15 +12,17 @@ int custom_shell_help(char **args, char __attribute__((__unused__)) **front);
  * Return: pointer
 */
 
-int (*get_custom_builtin(char *command))(char **args, char **front)
+int (*get_custom_builtin(char *command))(char **args)
 {
+	struct custom_builtin_t
+	{
+		const char *name;
+		int (*func)(char **args);
+	};
+	
 	struct custom_builtin_t funcs[] = {
 		{ "exit", custom_shell_exit },
-		{ "env", custom_shell_help },
-		{ "setenv", custom_setenv },
-		{ "unsetenv", custom_unsetenv },
 		{ "cd", custom_shell_cd },
-		{ "alias", custom_shell_alias },
 		{ "help", custom_shell_help },
 		{ NULL, NULL }
 	};
@@ -33,20 +31,21 @@ int (*get_custom_builtin(char *command))(char **args, char **front)
 	for (a = 0; funcs[a].name; a++)
 	{
 		if (_strcmp(funcs[a].name, command) == 0)
-			break;
+	{
+			return (funcs[a].func;
 	}
-	return (funcs[a].f);
+	}
+	return (NULL);
 }
 
 /**
  * custom_shell_exit - exit the shell
  * @args: the argument
- * @front: the front
  *
  * Return: depend in what happend
 */
 
-int custom_shell_exit(char **args, char **front)
+int custom_shell_exit(char **args)
 {
 	int a, l = 10;
 	unsigned int num = 0, max = 1 << (sizeof(int) * 8 - 1);
@@ -82,12 +81,11 @@ int custom_shell_exit(char **args, char **front)
 /**
  * custom_shell_cd - cd to the shell
  * @args: the args
- * @front: pointer
  *
  * Return: depend in what happend
 */
 
-int custom_shell_cd(char **args, char __attribute__((__unused__)) **front)
+int custom_shell_cd(char **args)
 {
 	char **dir_info, *new_line = "\n";
 	char *oldpwd = NULL, *pwd = NULL;
@@ -157,12 +155,11 @@ int custom_shell_cd(char **args, char __attribute__((__unused__)) **front)
 /**
  * custom_shell_help - help shell
  * @args: ardes
- * @front: the front
  *
  * Return: depend in what happend
 */
 
-int custom_shell_help(char **args, char __attribute__((__unused__)) **front)
+int custom_shell_help(char **args)
 {
 	if (!args[0])
 		custom_help();
@@ -177,9 +174,9 @@ int custom_shell_help(char **args, char __attribute__((__unused__)) **front)
 	else if (custom_strcmp(args[0], "setenv") == 0)
 		custom_setenv();
 	else if (custom_strcmp(args[0], "unsetenv") == 0)
-		custom_unsetenv();
+		custom_unsetenv(char **args, char **front);
 	else if (custom_strcmp(args[0], "help") == 0)
-		custom_shell_help();
+		custom_shell_help(char **args);
 	else
 		custom_exit(STDERR_FILENO, name, custom_strlen(name));
 	return (0);

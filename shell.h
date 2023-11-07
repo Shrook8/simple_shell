@@ -105,20 +105,17 @@ int custom_strncmp(const char *string1, const char *string2, size_t num);
 /* builtin */
 
 int (*get_custom_builtin(char *command))(char **args, char **front);
-int custom_shell_exit(char **args, char **front);
 int custom_env(char **arguments, char __attribute__((__unused__)) **front);
 int custom_setenv(char **arguments, char __attribute__((__unused__)) **front);
-int custom_unsetenv(char **arguments,
-		char __attribute__((__unused__)) **front);
+int custom_unsetenv(char **args, char **front);
 int custom_change_directory(char **arguments,
 		char __attribute__((__unused__)) **front);
 int custom_alias(char **arguments, char __attribute__((__unused__)) **front);
-int custom_help(char **args, char __attribute__((__unused__)) **front);
-int custom_shell_cd(char **args, char __attribute__((__unused__)) **front);
+int custom_help(char **args);
 
 int (*get_custom_builtin(char *command))(char **arguments, char **front);
-int custom_exit(char **arguments, char **front);
-int custom_cd(char **arguments, char **front);
+int custom_shell_exit(char **args);
+int custom_shell_cd(char **args);
 int custom_help(char **arguments, char **front);
 void custom_free_path_list(PathNode *head);
 
