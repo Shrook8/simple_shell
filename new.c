@@ -48,6 +48,30 @@ void custom_shell_help(void)
 	printf("3. help - Display this help message\n");
 }
 
+void execute_command(char **args)
+{
+	pid_t pid = fork();
+
+	if (pid == 0)
+	{
+		if (execvp(args[0], args) == -1)
+		{
+			perror("custom_shell");
+		}
+		exit(1);
+	}
+	else if (pid < 0)
+	{
+		perror("custom_shell");
+	}
+	else
+	{
+		int status;
+
+		waitpid(pid, &status, 0);
+	}
+}
+
 int main(void)
 {
 	char input[MAX_INPUT_SIZE];
@@ -79,27 +103,7 @@ int main(void)
 	}
 	else
 	{
-	pid_t pid = fork();
-
-	if (pid == 0)
-	{
-	if (execvp(args[0], args) == -1)
-	{
-	perror("custom_shell");
-	}
-	exit(1);
-	}
-	else if (pid < 0)
-	{
-	perror("custom_shell");
-	}
-	else
-	{
-		int status;
-
-		waitpid(pid, &status, 0);
-	}
-	}
+		execute_command(args);
 	}
 
 	return (0);
