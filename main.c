@@ -39,9 +39,9 @@ int executed_command(char **args, char **front)
 	if (!command || (access(command, F_OK) == -1))
 	{
 		if (errno == EACCES)
-			ret = (generate_error(arguments, 126));
+			ret = (generate_error(args, 126));
 		else
-			ret = (generate_error(arguments, 127));
+			ret = (generate_error(args, 127));
 	}
 	else
 	{
@@ -57,7 +57,7 @@ int executed_command(char **args, char **front)
 		{
 			execve(command, args, environ);
 			if (errno == EACCES)
-				ret = (generate_error(arguments, 126));
+				ret = (generate_error(args, 126));
 			free_environment();
 			free_command_arguments(args, front);
 			free_alias_list(alias_list);
