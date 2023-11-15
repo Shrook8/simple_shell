@@ -17,7 +17,7 @@ void handle_signal(int signal)
 	char *n_pro = "\n$ ";
 	
 	(void)signal;
-	sig(SIGINT, handle_signal);
+	/*sig(SIGINT, handle_signal);*/
 	write(STDIN_FILENO, n_pro, 3);
 }
 
