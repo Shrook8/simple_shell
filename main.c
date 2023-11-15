@@ -14,9 +14,11 @@ int custom_execute_command(char **args, char **front);
 
 void handle_signal(int signal)
 {
+	char *n_pro = "\n$ ";
+	
 	(void)signal;
-	write(STDIN_FILENO, "\n$ ", 3);
-	exit(0);
+	sig(SIGINT, handle_signal);
+	write(STDIN_FILENO, n_pro, 3);
 }
 
 /**
