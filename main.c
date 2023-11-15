@@ -1,8 +1,9 @@
 #include "shell.h"
 #include <signal.h>
+#include <stdlib.h>
 
-void signal_handler(int signal);
-int executed_command(char **args, char **front);
+void handle_signal(int signal);
+int custom_execute_command(char **args, char **front);
 
 /**
  * signal_handler - handle signal and print new promot
@@ -11,21 +12,22 @@ int executed_command(char **args, char **front);
  * Return: nothing
 */
 
-void signal_handler(int signal)
+void handle_signal(int signal)
 {
 	(void)signal;
 	write(STDIN_FILENO, "\n$ ", 3);
+	exit(0);
 }
 
 /**
- * executed_command - executes a command
+ * custom_execute_command - executes a command
  * @args: array of command
  * @front: doble pointer
  *
  * Return: if error occurs otherwise exit
 */
 
-int executed_command(char **args, char **front)
+int custom_execute_command(char **args, char **front)
 {
 	pid_t child_pid;
 	int status, is_external = 0, ret = 0;
@@ -91,7 +93,7 @@ int main(int argc, char *argv[])
 	name = argv[0];
 	hist = 1;
 	alias_list = NULL;
-	signal(SIGINT, signal_handler);
+	signal(SIGINT, handle_signal);
 	exe_ret = 0;
 	environ = copy_environment();
 	if (!environ)
@@ -106,7 +108,7 @@ int main(int argc, char *argv[])
 	if (!isatty(STDIN_FILENO))
 	{
 	while (ret != END_OF_FILE && ret != EXIT)
-	ret = executed_command(args, NULL);
+	ret = custom_execute_command(args, NULL);
 	free_environment();
 	free_alias_list(alias_list);
 	return (exe_ret);
@@ -114,7 +116,7 @@ int main(int argc, char *argv[])
 	while (1)
 	{
 		write(STDOUT_FILENO, prompt, 2);
-	ret = executed_command(args, NULL);
+	ret = custom_execute_command(args, NULL);
 	if (ret == END_OF_FILE || ret == EXIT)
 	{
 	if (ret == END_OF_FILE)

@@ -70,13 +70,13 @@ Alias *alias_list;
 
 /* main */
 
-void handle_signal(int *signal);
+void handle_signal(int signal);
 ssize_t custom_getline(char **lineptr, size_t *n, FILE *stream);
 void *custom_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 char **custom_strtok(char *line, char *delimiters);
 char *custom_get_command_location(char *command);
 PathNode *custom_get_path_directories(char *path);
-int custom_execute_command(char **arguments, char **front);
+int custom_execute_command(char **args, char **front);
 void custom_free_path_list(PathNode *head);
 char *custom_int_to_string(int number);
 
