@@ -56,7 +56,7 @@ char *find_correct_path(char **argv, char **paths)
 
 
 /**
- * get-path_directories - ret path dir
+ * get_path_directories - ret path dir
  * @env: env
  *
  * Return: str
@@ -96,64 +96,4 @@ int is_valid_command(char **argv, char **paths)
 		return (1);
 	}
 	return (-1);
-}
-
-
-/**
- * execute_custom_function - executes
- * @arry_tkn: array
- * @n: num
- * @env: env
- * @command: command
- *
- * Return: none
-*/
-
-void execute_custom__function(char **arry_tkn, int n,
-		char **env, char *command)
-{
-	pid_t pid = 1;
-	char *path, **paths, *con_path;
-
-	path = get_path_directories(env);
-	(void)command;
-	paths = custom_make_paths_separately(path);
-	arry_tkn[num_tokens] = NULL;
-	if (is_valid_command(arry_tkn, paths) == 1)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			if (arry_tkn[0][0] == '/' || arry_tkn[0][0] == '.')
-			{
-				if (execve(arry_tkn[0], arry_tkn, env) == -1)
-					handle_execution_error(arry_tkn, paths, command);
-			}
-				else
-				{
-					con_path = find_correct_path(arry_tkn, paths);
-					if (execve(con_path, arry_tkn, env) == -1)
-						handle_execution_error(arry_tkn, paths, command);
-				}
-			}
-			else if (pid < 0)
-			{
-				handle_execution_error(arry_tkn, paths, command);
-			}
-			else
-			{
-				int status, exit_status;
-
-				if (waitpid(pid, &status, 0) == -1)
-					exit(EXIT_FAILURE);
-				exit_status = WEXITSTATUS(status);
-				if (exit_status == 2)
-					free_all_then_exit(arry_tkn, paths, command);
-			}
-	}
-			else
-			{
-				handle_execution_error(arry_tkn, paths, command);
-			}
-			custom_free_2d(paths);
 }
