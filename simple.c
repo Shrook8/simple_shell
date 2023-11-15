@@ -139,7 +139,7 @@ int main(int argc, char **argv, char **env)
 		{
 			for (a = 0; token_array[a] != NULL; a++)
 				continue;
-			execute_custom_function(token_array, a, env, command_buffer);
+			execute_custom__function(token_array, a, env, command_buffer);
 			custom_free_2d(token_array);
 		}
 	}

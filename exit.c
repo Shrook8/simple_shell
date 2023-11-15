@@ -34,7 +34,7 @@ void custom_exit_command(char *command)
 	char *status_str = strchr(command, ' ');
 	int exit_status;
 
-	if (strcmo(command, "exit") == 0)
+	if (strcmp(command, "exit") == 0)
 	{
 		free(command);
 		exit(0);
