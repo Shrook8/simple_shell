@@ -118,27 +118,27 @@ void execute_custom__function(char **arry_tkn, int n,
 	path = get_path_directories(env);
 	(void)command;
 	paths = custom_make_paths_separately(path);
-	token_array[num_tokens] = NULL;
-	if (is_valid_command(token_array, paths) == 1)
+	arry_tkn[num_tokens] = NULL;
+	if (is_valid_command(arry_tkn, paths) == 1)
 	{
 		pid = fork();
 		if (pid == 0)
 		{
-			if (token_array[0][0] == '/' || token_array[0][0] == '.')
+			if (arry_tkn[0][0] == '/' || arry_tkn[0][0] == '.')
 			{
-				if (execve(token_array[0], token_array, env) == -1)
-					handle_execution_error(token_array, paths, command);
+				if (execve(arry_tkn[0], arry_tkn, env) == -1)
+					handle_execution_error(arry_tkn, paths, command);
 			}
 				else
 				{
-					con_path = find_correct_path(token_array, paths);
-					if (execve(con_path, token_array, env) == -1)
-						handle_execution_error(token_array, paths, command);
+					con_path = find_correct_path(arry_tkn, paths);
+					if (execve(con_path, arry_tkn, env) == -1)
+						handle_execution_error(arry_tkn, paths, command);
 				}
 			}
 			else if (pid < 0)
 			{
-				handle_execution_error(token_array, paths, command);
+				handle_execution_error(arry_tkn, paths, command);
 			}
 			else
 			{
@@ -148,12 +148,12 @@ void execute_custom__function(char **arry_tkn, int n,
 					exit(EXIT_FAILURE);
 				exit_status = WEXITSTATUS(status);
 				if (exit_status == 2)
-					free_all_then_exit(token_array, paths, command);
+					free_all_then_exit(arry_tkn, paths, command);
 			}
 	}
 			else
 			{
-				handle_execution_error(token_array, paths, command);
+				handle_execution_error(arry_tkn, paths, command);
 			}
 			custom_free_2d(paths);
 }
