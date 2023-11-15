@@ -15,8 +15,8 @@ void handle_comments(char *command)
 	{
 		if (isspace(command[a - 1]) && command[a] == '#')
 		{
-				command[a] = '\0';
-				break;
+			command[a] = '\0';
+			break;
 		}
 	}
 }
