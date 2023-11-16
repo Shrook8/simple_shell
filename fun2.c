@@ -16,7 +16,7 @@ void child_process(char **arry_tkn, char **env, char *command)
 	if (arry_tkn[0][0] == '/' || arry_tkn[0][0] == '.')
 	{
 		if (execve(arry_tkn[0], arry_tkn, env) == -1)
-			handle_execution_error(arrt_tkn, paths, command);
+			handle_execution_error(arry_tkn, paths, command);
 	}
 	else
 	{
@@ -42,10 +42,10 @@ void parent_process(pid_t pid, char **arry_tkn, char **paths, char *command)
 	int status, exit_status;
 
 	if (waitpid(pid, &status, 0) == -1)
-		exit(EXIT_FAILRE);
+		exit(EXIT_FAILURE);
 	exit_status = WEXITSTATUS(status);
 	if (exit_status == 2)
-		free_all_then_exit(arry_tkn, paths, command);
+		free_and_exit(arry_tkn, paths, command);
 }
 
 /**
@@ -65,7 +65,7 @@ void execute_custom__function(char **arry_tkn, int n,
 	char *path, **paths;
 
 	path = get_path_directories(env);
-	paths = custom_make_paths_separately(path);
+	paths = split_paths(paths);
 	arry_tkn[n] = NULL;
 	if (is_valid_command(arry_tkn, paths) == 1)
 	{

@@ -11,7 +11,7 @@
 char **split_paths(char *paths)
 {
 	char *token;
-	char **tokens = malloc(BUFF_SIZE * sizeof(char *));
+	char **tokens = malloc(BUFSIZ * sizeof(char *));
 	int n = 0, a;
 	char *paths_copy;
 
